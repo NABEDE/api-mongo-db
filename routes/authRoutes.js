@@ -60,4 +60,27 @@ router.get('/profile', authMiddleware, (req, res) => {
     res.json({ message: 'Accès autorisé', user: req.user });
 });
 
+// Route pour récupérer tous les produits
+router.get('/products', async (req, res) => {
+    try {
+        const products = await Product.find();
+        res.status(200).json(products);
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur serveur', error });
+    }
+});
+
+// Route pour récupérer un produit par son ID
+router.get('/products/:id', async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            return res.status(404).json({ message: 'Produit non trouvé' });
+        }
+        res.status(200).json(product);
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur serveur', error });
+    }
+});
+
 module.exports = router;
